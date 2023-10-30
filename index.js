@@ -288,7 +288,8 @@ FailOpen.prototype.acquireLock = function(id, callback)
                     [self._config.partitionKey]: dataBag.partitionID,
                     leaseDuration: getMsForLease(self._config.leaseDuration || 10000, self._config.leaseUnit).toString(),
                     ownerName: dataBag.ownerName,
-                    recordVersionNumber: dataBag.recordVersionNumber
+                    recordVersionNumber: dataBag.recordVersionNumber,
+                    createdAt: (new Date()).toISOString()
                 },
                 ConditionExpression: buildAttributeNotExistsExpression(self),
                 ExpressionAttributeNames: buildExpressionAttributeNames(self)
@@ -337,7 +338,8 @@ FailOpen.prototype.acquireLock = function(id, callback)
                     [self._config.partitionKey]: dataBag.partitionID,
                     leaseDuration: getMsForLease(self._config.leaseDuration || 10000, self._config.leaseUnit).toString(),
                     ownerName: dataBag.ownerName,
-                    recordVersionNumber: dataBag.recordVersionNumber
+                    recordVersionNumber: dataBag.recordVersionNumber,
+                    createdAt: (new Date()).toISOString()
                 },
                 ConditionExpression: `${buildAttributeNotExistsExpression(self)} or (recordVersionNumber = :recordVersionNumber)`,
                 ExpressionAttributeNames: buildExpressionAttributeNames(self),
@@ -440,7 +442,8 @@ const Lock = function(config)
                     [self._config.partitionKey]: self._config.partitionID,
                     leaseDuration: getMsForLease(self._config.leaseDuration || 10000, self._config.leaseUnit).toString(),
                     ownerName: self._config.ownerName,
-                    recordVersionNumber: newGuid
+                    recordVersionNumber: newGuid,
+                    createdAt: (new Date()).toISOString()
                 },
                 ConditionExpression: `${buildAttributeExistsExpression(self)} and recordVersionNumber = :recordVersionNumber`,
                 ExpressionAttributeNames: buildExpressionAttributeNames(self),
