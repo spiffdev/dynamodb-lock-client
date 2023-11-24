@@ -125,7 +125,7 @@ FailClosed.prototype.acquireLock = function(id, callback)
             sortID,
             ownerName: self._config.ownerName || `${pkg.name}@${pkg.version}_${os.userInfo().username}@${os.hostname()}`,
             retryCount: self._retryCount,
-            recordVersionNumber: crypto.randomBytes(64)
+            recordVersionNumber: crypto.randomBytes(64).toString('utf8')
         }
     )
 };
@@ -410,7 +410,7 @@ FailOpen.prototype.acquireLock = function(id, callback)
             sortID,
             ownerName: self._config.ownerName || `${pkg.name}@${pkg.version}_${os.userInfo().username}@${os.hostname()}`,
             retryCount: self._retryCount,
-            recordVersionNumber: crypto.randomBytes(64)
+            recordVersionNumber: crypto.randomBytes(64).toString('utf8')
         }
     )
 };
@@ -433,7 +433,7 @@ const Lock = function(config)
     {
         const refreshLock = function()
         {
-            const newGuid = crypto.randomBytes(64);
+            const newGuid = crypto.randomBytes(64).toString('utf8');
             const params =
             {
                 TableName: self._config.lockTable,
