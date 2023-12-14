@@ -464,7 +464,9 @@ const Lock = function(config)
             self._config.dynamodb.put(params, (error, data) =>
                 {
                     self._refreshing = false;
-                    self._refreshCallback();
+                    if (self._refreshCallback) {
+                        self._refreshCallback();
+                    }
                     self._refreshCallback = undefined;
                     if (error)
                     {
