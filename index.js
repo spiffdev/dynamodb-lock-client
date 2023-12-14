@@ -511,7 +511,7 @@ Lock.prototype.release = function(callback)
         {
             if (error && error.code === "ConditionalCheckFailedException")
             {
-                const err = new Error(`Failed to release lock ${buildExpressionAttributeNames(self)} with recordVersionNumber ${self._recordVersionNumber}.`);
+                const err = new Error(`Failed to release lock ${JSON.stringify(buildExpressionAttributeNames(self))} with recordVersionNumber ${self._recordVersionNumber}.`);
                 err.code = "FailedToReleaseLock";
                 err.originalError = error;
                 return callback(err);
