@@ -511,7 +511,7 @@ Lock.prototype.release = function(callback)
         {
             if (error && error.code === "ConditionalCheckFailedException")
             {
-                const err = new Error(`Failed to release lock ${self._config.partitionID} with recordVersionNumber ${self._recordVersionNumber}.`);
+                const err = new Error(`Failed to release lock ${self._config.partitionID} with recordVersionNumber ${self._recordVersionNumber}.\n${error}`);
                 err.code = "FailedToReleaseLock";
                 err.originalError = error;
                 return callback(err);
