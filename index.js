@@ -433,6 +433,7 @@ const Lock = function(config)
     {
         const refreshLock = function()
         {
+            self._refreshing = true;
             const newGuid = crypto.randomUUID();
             const params =
             {
@@ -462,6 +463,9 @@ const Lock = function(config)
             }
             self._config.dynamodb.put(params, (error, data) =>
                 {
+                    self._refreshing = false;
+                    self._refreshCallback();
+                    self._refreshCallback = undefined;
                     if (error)
                     {
                         return self.emit("error", error);
@@ -484,6 +488,10 @@ Lock.prototype.release = function(callback)
 {
     const self = this;
     self._released = true;
+    if (self._refreshing) {
+        self._refreshCallback = this.release.bind(this, callback);
+        return;
+    }
     if (self.heartbeatTimeout)
     {
         clearTimeout(self.heartbeatTimeout);
