@@ -488,47 +488,49 @@ util.inherits(Lock, events.EventEmitter);
 
 Lock.prototype.release = function(callback)
 {
-    const self = this;
-    self._released = true;
-    if (self._refreshing) {
-        self._refreshCallback = this.release.bind(this, callback);
-        return;
-    }
-    if (self.heartbeatTimeout)
-    {
-        clearTimeout(self.heartbeatTimeout);
-        self.heartbeatTimeout = undefined;
-    }
-    const params =
-    {
-        TableName: self._config.lockTable,
-        Key:
-        {
-            [self._config.partitionKey]: self._config.partitionID
-        },
-        ConditionExpression: `${buildAttributeExistsExpression(self)} and recordVersionNumber = :recordVersionNumber`,
-        ExpressionAttributeNames: buildExpressionAttributeNames(self),
-        ExpressionAttributeValues:
-        {
-            ":recordVersionNumber": self._recordVersionNumber
+    try {
+        const self = this;
+        self._released = true;
+        if (self._refreshing) {
+            self._refreshCallback = this.release.bind(this, callback);
+            return;
         }
-    };
-    if (self._config.sortKey)
-    {
-        params.Key[self._config.sortKey] = self._config.sortID;
-    }
-    self._config.dynamodb.delete(params, (error, data) =>
+        if (self.heartbeatTimeout)
         {
-            if (error && error.code === "ConditionalCheckFailedException")
+            clearTimeout(self.heartbeatTimeout);
+            self.heartbeatTimeout = undefined;
+        }
+        const params =
+        {
+            TableName: self._config.lockTable,
+            Key:
             {
-                const err = new Error(`Failed to release lock with params: ${JSON.stringify(params)}.\n${error}`);
-                err.code = "FailedToReleaseLock";
-                err.originalError = error;
-                return callback(err);
+                [self._config.partitionKey]: self._config.partitionID
+            },
+            ConditionExpression: `${buildAttributeExistsExpression(self)} and recordVersionNumber = :recordVersionNumber`,
+            ExpressionAttributeNames: buildExpressionAttributeNames(self),
+            ExpressionAttributeValues:
+            {
+                ":recordVersionNumber": self._recordVersionNumber
             }
-            return callback(error);
+        };
+        if (self._config.sortKey)
+        {
+            params.Key[self._config.sortKey] = self._config.sortID;
         }
-    );
+        self._config.dynamodb.delete(params, (error, data) =>
+            {
+                if (error && error.code === "ConditionalCheckFailedException")
+                {
+                    console.warn("WARNING: Failed to release lock: ConditionalCheckFailedException.")
+                }
+                return callback(undefined);
+            }
+        );
+    } catch (e) {
+        console.warn(`WARNING: Failed to release lock: ${e}`)
+        callback(undefined);
+    }
 };
 
 module.exports =
