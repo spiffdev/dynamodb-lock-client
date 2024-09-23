@@ -30,8 +30,14 @@ export default defineConfig({
         json(),
         dts(),
     ],
-    output: {
-        file: "dist/index.mjs",
-        format: "esm",
-    },
+    output: [
+        {
+            file: "dist/index.mjs",
+            format: "esm",
+        },
+        {
+            file: "dist/index.js",
+            format: "cjs",
+        },
+    ],
 });
