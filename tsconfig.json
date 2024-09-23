@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "strict": true,
+        "preserveConstEnums": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "ESNext",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "*": ["node_modules/*"]
+        },
+        "types": ["jest", "node"]
+    },
+    "include": ["src/**/*", "rollup.config.ts", "index.ts"],
+    "exclude": ["node_modules", "src/**/*.test.*", "dist"]
+}
