@@ -12,23 +12,14 @@ import {
     DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-// https://stackoverflow.com/a/63549561/23523714
-type Excluding<Type, ReservedKeys> = (Type extends ReservedKeys ? never : Type) &
-    (ReservedKeys extends Type ? never : Type);
-
-type StringExcludingReservedKeys = Excluding<
-    string,
-    "leaseDuration" | "lockAcquiredTimeUnixMs" | "ownerName" | "recordVersionNumber"
->;
-
 type LeaseUnit = "milliseconds" | "seconds" | "minutes" | "hours" | "days";
 
 export interface FailOpenConfig {
     ownerName: string;
     dynamodb: DynamoDBDocumentClient;
     lockTable: string;
-    partitionKey: StringExcludingReservedKeys;
-    sortKey?: StringExcludingReservedKeys;
+    partitionKey: string;
+    sortKey?: string;
     heartbeatPeriodMs?: number;
     leaseDuration: number;
     leaseUnit: LeaseUnit;
@@ -107,11 +98,20 @@ interface AcquireLockData {
     retryCount: number;
 }
 
+const reservedFieldNames = ["leaseDuration", "lockAcquiredTimeUnixMs", "ownerName", "recordVersionNumber"];
+
 export class FailOpen<PartitionTableKeyType extends string | number | Record<string, any>> {
     private config: FailOpenConfig;
     private retryCount: number;
 
     constructor(config: FailOpenConfig) {
+        if (reservedFieldNames.includes(config.partitionKey)) {
+            throw new Error(`Cannot use reserved field name ${config.partitionKey} for partition key.`);
+        }
+        if (config.sortKey && reservedFieldNames.includes(config.sortKey)) {
+            throw new Error(`Cannot use reserved field name ${config.sortKey} for sort key.`);
+        }
+
         this.config = config;
         this.retryCount = this.config.retryCount ?? 1;
     }
