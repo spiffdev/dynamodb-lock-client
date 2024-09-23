@@ -4,7 +4,7 @@
   "description": "A general purpose distributed locking library built for AWS DynamoDB.",
   "scripts": {
     "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --bundleConfigAsCjs",
-    "postinstall": "yarn build"
+    "prepare": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --bundleConfigAsCjs"
   },
   "main": "dist/index.mjs",
   "devDependencies": {
