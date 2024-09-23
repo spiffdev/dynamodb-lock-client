@@ -3,20 +3,24 @@
   "version": "1.0.0",
   "description": "A general purpose distributed locking library built for AWS DynamoDB.",
   "scripts": {
-    "inject-examples": "node scripts/injectExamples.js",
-    "prepublishOnly": "npm run inject-examples",
-    "readme": "node examples/readme.js",
-    "test": "jest"
+    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --bundleConfigAsCjs"
   },
-  "main": "index.js",
+  "main": "dist/index.mjs",
   "devDependencies": {
-    "jest": "26.0.1"
+    "@aws-sdk/client-dynamodb": "^3.656.0",
+    "@aws-sdk/lib-dynamodb": "^3.656.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "jest": "26.0.1",
+    "prettier": "^3.3.3",
+    "rollup": "^4.22.4",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2"
   },
-  "dependencies": {
-    "@hapi/joi": "17.1.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
-    "aws-sdk": "^2.508.0"
+    "@aws-sdk/client-dynamodb": "^3.656.0",
+    "@aws-sdk/lib-dynamodb": "^3.656.0"
   },
   "repository": {
     "type": "git",
