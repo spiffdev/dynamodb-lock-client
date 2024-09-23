@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A general purpose distributed locking library built for AWS DynamoDB.",
   "scripts": {
-    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --bundleConfigAsCjs"
+    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --bundleConfigAsCjs",
+    "postinstall": "build"
   },
   "main": "dist/index.mjs",
   "devDependencies": {
@@ -39,7 +40,8 @@
     "Tom Yam",
     "Cooper Bell <john.cooper.bell@gmail.com>",
     "Katarina Golbang",
-    "fpronto <fpronto94@gmail.com>"
+    "fpronto <fpronto94@gmail.com>",
+    "SpiffCommerce"
   ],
   "license": "MIT"
 }
