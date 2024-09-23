@@ -15,7 +15,7 @@ import {
 type LeaseUnit = "milliseconds" | "seconds" | "minutes" | "hours" | "days";
 
 export interface FailOpenConfig {
-    ownerName: string;
+    ownerName?: string;
     dynamodb: DynamoDBDocumentClient;
     lockTable: string;
     partitionKey: string;
